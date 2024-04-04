@@ -133,7 +133,7 @@ cargo run -p sui-test-validator
 
 
 
-### Running the demo
+### Run the demo
 
 Change to the `sui` directory:
 
@@ -198,6 +198,39 @@ solana-test-validator
 
 
 ### Set up a wallet and get tokens for gas
+
+todo
+
+
+### Run the demo
+
+Change to the `solana` directory:
+
+```
+cd solana
+```
+
+Build the program:
+
+```
+cargo build-bpf
+```
+
+This creates a `target` directory with the contents:
+
+```
+```
+
+Run the tests:
+
+```
+sui move test
+```
+
+Deploy the contract:
+
+```
+```
 
 
 
