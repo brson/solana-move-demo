@@ -197,9 +197,24 @@ solana-test-validator
 ```
 
 
+## Change the global configuration to localhost
+
+Run
+
+```
+solana config set -u localhost
+```
+
+Otherwise all commands will need a `--url localhost` argument.
+
+
+
 ### Set up a wallet and get tokens for gas
 
-todo
+```
+solana-keygen new
+solana airdrop 10
+```
 
 
 ### Run the demo
@@ -219,18 +234,25 @@ cargo build-bpf
 This creates a `target` directory with the contents:
 
 ```
+sbf-solana-solana/release/
+  demo.so
 ```
 
 Run the tests:
 
 ```
-sui move test
+cargo test
 ```
 
 Deploy the contract:
 
 ```
+solana program deploy target/sbf-solana-solana/release/demo.so
 ```
+
+Call the contract:
+
+todo - this needs to be done from code
 
 
 
