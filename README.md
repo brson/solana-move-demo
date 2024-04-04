@@ -41,18 +41,19 @@ plus introspection and reflection on the interface of the program.
 ## Which toolset should Solana-Move integrate with?
 
 Since our project is a mashup of Solana, Move, and Sui,
-there are already 4 CLI tools involved.
+there are already 4 main CLI tools involved.
 
 - `cargo` - The Rust build tool. Solana uses a cargo subcommand, `cargo build-bpf`,
   as well as `cargo test` etc.
-- `solana` - 
-
-todo
+- `solana` - Used for deploying to Solana, wallets, etc.
+- `sui` - All interaction with Move and Sui
+- `move` - Move build tools, not typically used directly with Sui
 
 These tools perhaps each have their own different designs and "feels".
 I suggest that since we are a Solana project we should attempt to integrate with
-and match the `solana` experience. Ultimately we might want any needed
-CLI commands to part of `solana` CLI.
+and match the `solana` experience. Ultimately we might want any new
+CLI commands to part of `solana` CLI, and to integrate Move features with
+existing `solana` commands.
 
 For now though I suggest we work in our own `solana-move` CLI, inside the
 `external-crates/move/solana` subdirectory of Solana's sui fork.
@@ -68,16 +69,20 @@ of mainline Solana pull requests.
 
 **This is aspirational - none of this works now but is what we are working toward.**
 
+To run this demo you'll need the solana CLI tools installed,
+and the CLI wallet set up with testnet tokens.
+
+
 
 
 
 
 ## Running the Sui example demo
 
-This shows how the Sui workflow works for the features we want to demo on Solana.
+This shows how the Sui workflow works for the features we want to demo with Move on Solana.
 
 
-### Install `sui` tool and run `sui-test-validator`
+### Install `sui` CLI tools and run the test validator
 
 First install the Sui tools following
 
@@ -105,7 +110,29 @@ cargo run -p sui-test-validator
 
 ## Running the Solana example demo
 
-todo
+This shows how the Solana workflow works for the features we want to demo with Move on Solana.
+
+
+### Install `solana` CLI tools and run the test validator
+
+First install the Solana tools following
+
+https://docs.solanalabs.com/cli/install
+
+e.g. the stable toolchain
+
+```
+sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
+```
+
+Run the test validator:
+
+```
+solana-test-validator
+```
+
+
+### Set up a wallet and get tokens for gas
 
 
 
