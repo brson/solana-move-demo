@@ -10,11 +10,11 @@ describes implementation details and a roadmap.
 - [Requirements](#user-content-requirements)
 - [Which toolset should Solana-Move integrate with?](#user-content-which-toolset-should-solana-move-integrate-with)
 - [Running the Solana-Move demo](#user-content-running-the-solana-move-demo)
-- [Running the Sui example demo](#user-content-running-the-sui-example-demo)
-- [Running the Solana example demo](#user-content-running-the-solana-examnple-demo)
 - [`solana-move` commands discussion](#user-content-solana-move-commands)
 - [Calling Move programs from the client](#user-content-calling-move-programs-from-the-client)
 - [Proposed roadmap](#user-content-proposed-roadmap)
+- [Running the Sui example demo](#user-content-running-the-sui-example-demo)
+- [Running the Solana example demo](#user-content-running-the-solana-examnple-demo)
 
 
 
@@ -102,6 +102,70 @@ demo.json
 
 
 
+## `solana-move` commands discussion
+
+
+### `solana-move build`
+
+Compare to: `sui move build`, `move build`, `cargo build-bpf`
+
+  - Locate and download bytecode for dependencies
+
+### `solana-move test`
+
+Compare to: `sui move test`, `move test`, `cargo test`
+
+### `solana-move publish`
+
+Compare to: `sui client publish`, `solana program publish`
+
+### `solana-move call`
+
+Compare to: `sui client call`
+
+
+- Build
+  - Compile with move-cli
+    - Sui: `sui move build`
+    - Move: `move build`
+    - Solana: `cargo build-bpf`
+    - Solana-Move: `solana-move build`
+- Test
+  - Sui: `sui move test`
+  - Move: `move test`
+  - Solana: `cargo test`
+  - Solana-Move: `solana-move test`
+- Deploy with move-cli/solana-cli
+  - Sui: `sui client publish`
+  - Solana: `solana program publish`
+  - Solana-Move: `solana-move publish`
+  - Update deployed contracts
+- Call
+  - Call from Rust code, via Solana/Move client SDK
+  - Call from command line via ?..
+  - Call with argument and return value
+  - Sui: `sui client call`
+  - Solana-Move: `solana-move call`
+
+
+
+
+## Calling Move programs from the client
+
+
+
+## Proposed roadmap
+
+
+
+
+
+
+---
+
+
+
+
 
 ## Running the Sui example demo
 
@@ -173,6 +237,12 @@ Deploy the contract:
 
 
 
+---
+
+
+
+
+
 ## Running the Solana example demo
 
 This shows how the Solana workflow works for the features we want to demo with Move on Solana.
@@ -238,6 +308,8 @@ sbf-solana-solana/release/
   demo.so
 ```
 
+fixme: where is program-keypair.json?
+
 Run the tests:
 
 ```
@@ -253,61 +325,3 @@ solana program deploy target/sbf-solana-solana/release/demo.so
 Call the contract:
 
 todo - this needs to be done from code
-
-
-
-
-## `solana-move` commands discussion
-
-
-### `solana-move build`
-
-Compare to: `sui move build`, `move build`, `cargo build-bpf`
-
-  - Locate and download bytecode for dependencies
-
-### `solana-move test`
-
-Compare to: `sui move test`, `move test`, `cargo test`
-
-### `solana-move publish`
-
-Compare to: `sui client publish`, `solana program publish`
-
-### `solana-move call`
-
-Compare to: `sui client call`
-
-
-- Build
-  - Compile with move-cli
-    - Sui: `sui move build`
-    - Move: `move build`
-    - Solana: `cargo build-bpf`
-    - Solana-Move: `solana-move build`
-- Test
-  - Sui: `sui move test`
-  - Move: `move test`
-  - Solana: `cargo test`
-  - Solana-Move: `solana-move test`
-- Deploy with move-cli/solana-cli
-  - Sui: `sui client publish`
-  - Solana: `solana program publish`
-  - Solana-Move: `solana-move publish`
-  - Update deployed contracts
-- Call
-  - Call from Rust code, via Solana/Move client SDK
-  - Call from command line via ?..
-  - Call with argument and return value
-  - Sui: `sui client call`
-  - Solana-Move: `solana-move call`
-
-
-
-
-## Calling Move programs from the client
-
-
-
-## Proposed roadmap
-
