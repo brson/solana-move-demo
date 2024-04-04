@@ -12,6 +12,7 @@ describes implementation details and a roadmap.
 - [Running the Solana-Move demo](#user-content-running-the-solana-move-demo)
 - [`solana-move` commands discussion](#user-content-solana-move-commands)
 - [Calling Move programs from the client](#user-content-calling-move-programs-from-the-client)
+- [Handling on-chain bytecode dependencies](#user-content-handling-on-chain-bytecode-dependencies)
 - [Proposed roadmap](#user-content-proposed-roadmap)
 - [Running the Sui example demo](#user-content-running-the-sui-example-demo)
 - [Running the Solana example demo](#user-content-running-the-solana-examnple-demo)
@@ -91,15 +92,27 @@ Build the program:
 solana-move build
 ```
 
-This creates the `todo` directory containing:
+This creates the `build` directory containing:
 
 ```
-demo.so
-demo.mv
-demo.json
+demo/
+  demo.so
+  BuildInfo.yml
+  bytecode_modules/
+    demo.mv
+    dependencies/...
+  source_maps/...
+  sources/...
+target/
+  ...
 ```
 
+This structure is a combination of the `move-cli` output
+and the `cargo` output, as our build will include
+both move compiler builds and rust builds (for move-native).
+Note here that the rbpf dylib is built into the `build/demo` directory.
 
+todo
 
 
 ## `solana-move` commands discussion
@@ -156,10 +169,16 @@ Compare to: `sui client call`
 
 ## Proposed roadmap
 
+These can correspond to GitHub issues:
 
-
-
-
+- Create `solana-move` crate in `external-crates/move/solana/`
+  - Set up arg parsing with clap for the commands in this demo
+- Make `solana-move build` and `solana-move test` behave like
+  `move build` and `move test`. The Move libraries are reusable
+  so this shouldn't have much code duplication.
+- Write `solana-move deploy` - crib off of `solana program deploy`,
+  or just shell out to `solana program deploy`.
+- Create an client SDK crate, perhaps `solana-move-program` (vs. `solana-program`)
 
 ---
 
