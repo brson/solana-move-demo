@@ -1,13 +1,20 @@
 # End-to-end Move-on-Solana demo
 
-- [Requirements](#user-requirements)
-- [Which toolset should Solana-Move integrate with?](#user-which-toolset-should-solana-move-integrate-with)
-- [Running the Solana-Move demo](#user-running-the-solana-move-demo)
-- [Running the Sui example demo](#user-running-the-sui-example-demo)
-- [Running the Solana example demo](#user-running-the-solana-examnple-demo)
-- [`solana-move` commands discussion](#user-solana-move-commands)
-- [Calling Move programs from the client](#user-calling-move-programs-from-the-client)
-- [Proposed roadmap](#user-proposed-roadmap)
+This is a demo of running Move language programs on Solana.
+
+It specifies minimum feature requirements,
+outlines a minimal workflow for building, deploying and running Move programs,
+demos comparable existing workflows on Sui and Solana,
+describes implementation details and a roadmap.
+
+- [Requirements](#user-content-requirements)
+- [Which toolset should Solana-Move integrate with?](#user-content-which-toolset-should-solana-move-integrate-with)
+- [Running the Solana-Move demo](#user-content-running-the-solana-move-demo)
+- [Running the Sui example demo](#user-content-running-the-sui-example-demo)
+- [Running the Solana example demo](#user-content-running-the-solana-examnple-demo)
+- [`solana-move` commands discussion](#user-content-solana-move-commands)
+- [Calling Move programs from the client](#user-content-calling-move-programs-from-the-client)
+- [Proposed roadmap](#user-content-proposed-roadmap)
 
 
 
