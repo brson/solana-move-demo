@@ -79,6 +79,25 @@ of mainline Solana pull requests.
 To run this demo you'll need the solana CLI tools installed,
 and the CLI wallet set up with testnet tokens.
 
+Change to the `solana-move` directory:
+
+```
+cd solana-move
+```
+
+Build the program:
+
+```
+solana-move build
+```
+
+This creates the `todo` directory containing:
+
+```
+demo.so
+demo.mv
+demo.json
+```
 
 
 
@@ -114,6 +133,45 @@ cargo run -p sui-test-validator
 
 
 
+### Running the demo
+
+Change to the `sui` directory:
+
+```
+cd sui
+```
+
+Build the program:
+
+```
+sui move build
+```
+
+This creates a `build` directory with the contents:
+
+```
+demo/
+  BuildInfo.yml
+  bytecode_modules/
+    demo.mv
+    dependencies/...
+  source_maps/...
+  sources/...
+```
+
+Run the tests:
+
+```
+sui move test
+```
+
+Deploy the contract:
+
+```
+```
+
+
+
 
 ## Running the Solana example demo
 
@@ -129,7 +187,7 @@ https://docs.solanalabs.com/cli/install
 e.g. the stable toolchain
 
 ```
-sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
+sh -c "$(curl -sSfL https://release.solana.com/v1.18.9/install)"
 ```
 
 Run the test validator:
