@@ -63,7 +63,10 @@ and match the `solana` experience. Ultimately we might want any new
 CLI commands to part of `solana` CLI, and to integrate Move features with
 existing `solana` commands.
 
-For now though I suggest we work in our own `solana-move` CLI, inside the
+For an initial demo I suggest we can do everything necessary with a combination of
+the `solana` and `move` commands.
+
+Beyond that we might work in our own `solana-move` CLI, inside the
 `external-crates/move/solana` subdirectory of Solana's sui fork.
 We can consider this a prototype tool with the intent of moving the functionality
 elsewhere once proven. Working on the CLI in Solana's `sui` fork will avoid
@@ -80,6 +83,19 @@ of mainline Solana pull requests.
 To run this demo you'll need the solana CLI tools installed,
 and the CLI wallet set up with testnet tokens.
 
+You'll also need the `move` command from Solana's `sui` repo,
+built with Solana support. This can be done with
+
+```
+cargo build --manifest-path=external-crates/move/Cargo.toml -p move-cli --features=solana-backend
+```
+
+or optionally installed with
+
+```
+cargo install --manifest-path=external-crates/move/Cargo.toml -p move-cli --features=solana-backend
+```
+
 Change to the `solana-move` directory:
 
 ```
@@ -89,7 +105,7 @@ cd solana-move
 Build the program:
 
 ```
-solana-move build
+move build
 ```
 
 This creates the `build` directory containing:
@@ -327,18 +343,23 @@ sbf-solana-solana/release/
   demo.so
 ```
 
-fixme: where is program-keypair.json?
-
 Run the tests:
 
 ```
 cargo test
 ```
 
+Create a re-usable `program-keypair.json`.
+This contais the address of and signing key to deploy and redeploy.
+
+```
+solana-keygen new -o program-keypair.json
+```
+
 Deploy the contract:
 
 ```
-solana program deploy target/sbf-solana-solana/release/demo.so
+solana program deploy target/sbf-solana-solana/release/demo.so --program-id program-keypair.json
 ```
 
 Call the contract:
