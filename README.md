@@ -13,6 +13,7 @@ describes implementation details and a roadmap.
 - [`solana-move` commands discussion](#user-content-solana-move-commands-discussion)
 - [Calling Move programs from the client](#user-content-calling-move-programs-from-the-client)
 - [Handling on-chain bytecode dependencies](#user-content-handling-on-chain-bytecode-dependencies)
+- [An interim storage model](#user-content-an-interim-storage-model)
 - [Proposed roadmap](#user-content-proposed-roadmap)
 - [Running the Sui example demo](#user-content-running-the-sui-example-demo)
 - [Running the Solana example demo](#user-content-running-the-solana-examnple-demo)
@@ -237,6 +238,7 @@ Compare to: `sui client call`
 
 ## Calling Move programs from the client
 
+todo
 
 
 ## Handling on-chain bytecode dependencies
@@ -244,13 +246,37 @@ Compare to: `sui client call`
 
 
 
+## An interim storage model
+
+At the momement, actually storing data is out of scope for the demo,
+but I think it's worth saying something about how the storage model is intended to
+work in the short term.
+
+Firstly, we don't expect it to be secure for now, just to work.
+
+The major facets of how storage is expected to work are:
+
+- Contracts are _statically compiled together_.
+  That is, programs don't actually call other programs;
+  when I compile a move program that calls another, I download the bytecode for the callee
+  and compile it into the caller.
+- There is a dedicated storage program, written in Rust,
+  that all move programs call to write persistent data,
+  and that program "owns" all move-language data.
+
+This obviously has lots of problems,
+but seems feasible to accomplish within the constraints we have currently.
+
+
+
 ## Proposed roadmap
 
-There are three main thrusts of work here:
+There are a few main thrusts of work here:
 
 - Creating `solana-move-sdk` crate that can parse move values and prepare solana transactions
 - Creating the `solana-move` CLI, and especially the solana-move-specific `solana-move call`
   command (other commands will be identical to `move` and `solana` commands at first.
+- Deploying and retrieving bytecode for byte-code based dependencies and introspection.
 - Moving the storage model forward.
 
 
