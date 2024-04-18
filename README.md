@@ -196,6 +196,9 @@ These can correspond to GitHub issues:
   or just shell out to `solana program deploy`.
 - Create an client SDK crate, perhaps `solana-move-program` (vs. `solana-program`)
 
+
+
+
 ---
 
 
@@ -224,11 +227,27 @@ git checkout origin/testnet -b testnet
 # This will put `sui` in your `.cargo/bin` directory for use later
 cargo install --path crates/sui
 # Run the validator
-cargo run -p sui-test-validator
+RUST_LOG=off,sui_node=info cargo run -p sui-test-validator
 ```
+
+Configure sui for the local network per
+[instructions](https://docs.sui.io/guides/developer/getting-started/local-network):
+
+```
+sui client new-env --alias local --rpc http://127.0.0.1:9000
+```
+
+FIXME: the above doesn't actually work if sui is not alreday configured -
+you'll have to walk through the interactive setup, providing the same configuration.
+
+
 
 
 ### Set up a wallet and get tokens for gas
+
+```
+sui client faucet && sui client gas
+```
 
 
 
@@ -267,8 +286,16 @@ sui move test
 Deploy the contract:
 
 ```
+sui client publish --gas-budget 10000000
 ```
 
+Call the contract:
+
+```
+$ sui client call --package <package-id> --module demo --function main --args 10 --gas-budget 10000000
+```
+
+The package ID will be output by the previous `publish` command.
 
 
 
