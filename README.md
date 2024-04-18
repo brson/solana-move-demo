@@ -80,10 +80,7 @@ of mainline Solana pull requests.
 
 **This is aspirational - none of this works now but is what we are working toward.**
 
-To run this demo you'll need the solana CLI tools installed,
-and the CLI wallet set up with testnet tokens.
-
-You'll also need the `move` command from Solana's `sui` repo,
+You'll need the `move` command from Solana's `sui` repo,
 built with Solana support. This can be done with
 
 ```
@@ -96,22 +93,62 @@ or optionally installed with
 cargo install --manifest-path=external-crates/move/Cargo.toml -p move-cli --features=solana-backend
 ```
 
-Change to the `solana-move` directory:
+
+### Install `solana` CLI tools and run the test validator
+
+First install the Solana tools following
+
+https://docs.solanalabs.com/cli/install
+
+e.g. the stable toolchain
+
+```
+sh -c "$(curl -sSfL https://release.solana.com/v1.18.9/install)"
+```
+
+Run the test validator:
+
+```
+solana-test-validator
+```
+
+
+### Change the global configuration to localhost
+
+Run
+
+```
+solana config set -u localhost
+```
+
+Otherwise all commands will need a `--url localhost` argument.
+
+
+
+### Set up a wallet and get tokens for gas
+
+```
+solana-keygen new
+solana airdrop 10
+```
+
+
+### Build the contract
+
+Change to the `solana-move` directory and build
 
 ```
 cd solana-move
 ```
 
-Build the program:
-
 ```
-move build
+move build --arch=solana
 ```
 
 This creates the `build` directory containing:
 
 ```
-demo/
+solana/demo/
   demo.so
   BuildInfo.yml
   bytecode_modules/
@@ -119,16 +156,47 @@ demo/
     dependencies/...
   source_maps/...
   sources/...
-target/
   ...
 ```
 
-This structure is a combination of the `move-cli` output
-and the `cargo` output, as our build will include
-both move compiler builds and rust builds (for move-native).
-Note here that the rbpf dylib is built into the `build/demo` directory.
+Note this is mostly the same as the Sui move build,
+but there is an rbf dylib, demo.so,
+and it's in an arch-specific `solana` directory.
+
+
+### Run the tests
+
+```
+move test
+```
+
+
+### Deploy the contract
+
+Create a re-usable `program-keypair.json`.
+This contais the address of and signing key to deploy and redeploy.
+
+```
+solana-keygen new -o program-keypair.json
+```
+
+```
+solana program deploy target/sbf-solana-solana/release/demo.so --program-id program-keypair.json
+```
+
+### Call the contract from source
 
 todo
+
+
+### Call the contract from the CLI
+
+```
+solana-move call --program <address> --module demo --function main --args 10
+```
+
+
+
 
 
 ## `solana-move` commands discussion
@@ -138,7 +206,8 @@ todo
 
 Compare to: `sui move build`, `move build`, `cargo build-bpf`
 
-  - Locate and download bytecode for dependencies
+- Locate and download bytecode for dependencies
+- Find move-native, optionally embedded directly in binary
 
 ### `solana-move test`
 
@@ -152,29 +221,8 @@ Compare to: `sui client publish`, `solana program publish`
 
 Compare to: `sui client call`
 
-
-- Build
-  - Compile with move-cli
-    - Sui: `sui move build`
-    - Move: `move build`
-    - Solana: `cargo build-bpf`
-    - Solana-Move: `solana-move build`
-- Test
-  - Sui: `sui move test`
-  - Move: `move test`
-  - Solana: `cargo test`
-  - Solana-Move: `solana-move test`
-- Deploy with move-cli/solana-cli
-  - Sui: `sui client publish`
-  - Solana: `solana program publish`
-  - Solana-Move: `solana-move publish`
-  - Update deployed contracts
-- Call
-  - Call from Rust code, via Solana/Move client SDK
-  - Call from command line via ?..
-  - Call with argument and return value
-  - Sui: `sui client call`
-  - Solana-Move: `solana-move call`
+- Parse arguments as move types
+- Build solana transactions
 
 
 
@@ -183,19 +231,50 @@ Compare to: `sui client call`
 
 
 
+
+
+
 ## Proposed roadmap
 
-These can correspond to GitHub issues:
+There are three main thrusts of work here:
+
+- Creating `solana-move-sdk` crate that can parse move values and prepare solana transactions
+- Creating the `solana-move` CLI, and especially the solana-move-specific `solana-move call`
+  command (other commands will be identical to `move` and `solana` commands at first.
+- Moving the storage model forward.
+
+
+### Demo 1
+
+
+- Create a client SDK crate, perhaps `solana-move-sdk` (vs. `solana-sdk`)
+  - This will depend on both existing Solana and Move crates
+- Add APIs for parsing move values
+- Add APIs for preparing Move transactions
+- Write the demo `solana-demo-client` using the `solana-move-sdk`
+  and `solana-client` SDKs, calling the demo program.
+
+
+### Demo 2
 
 - Create `solana-move` crate in `external-crates/move/solana/`
   - Set up arg parsing with clap for the commands in this demo
+- Include the compiled move-native library directly into the `solana-move` binary
+- Set up binary releases of `solana-move` that people can test
 - Make `solana-move build` and `solana-move test` behave like
   `move build` and `move test`. The Move libraries are reusable
   so this shouldn't have much code duplication.
 - Write `solana-move deploy` - crib off of `solana program deploy`,
   or just shell out to `solana program deploy`.
-- Create an client SDK crate, perhaps `solana-move-program` (vs. `solana-program`)
+- Create `solana-move call` using `solana-move-client`
 
+
+## Future
+
+- Storage model
+- Reduce size of compiled output
+  - Function sections
+  - LTO
 
 
 
@@ -251,15 +330,13 @@ sui client faucet && sui client gas
 
 
 
-### Run the demo
+## Build the program
 
-Change to the `sui` directory:
+Change to the `sui` directory and build
 
 ```
 cd sui
 ```
-
-Build the program:
 
 ```
 sui move build
@@ -277,22 +354,22 @@ demo/
   sources/...
 ```
 
-Run the tests:
+## Run the tests
 
 ```
 sui move test
 ```
 
-Deploy the contract:
+## Deploy the contract
 
 ```
 sui client publish --gas-budget 10000000
 ```
 
-Call the contract:
+## Call the contract
 
 ```
-$ sui client call --package <package-id> --module demo --function main --args 10 --gas-budget 10000000
+sui client call --package <package-id> --module demo --function main --args 10 --gas-budget 10000000
 ```
 
 The package ID will be output by the previous `publish` command.
@@ -370,11 +447,13 @@ sbf-solana-solana/release/
   demo.so
 ```
 
-Run the tests:
+## Run the tests
 
 ```
 cargo test
 ```
+
+## Deploy the contract
 
 Create a re-usable `program-keypair.json`.
 This contais the address of and signing key to deploy and redeploy.
@@ -383,12 +462,10 @@ This contais the address of and signing key to deploy and redeploy.
 solana-keygen new -o program-keypair.json
 ```
 
-Deploy the contract:
-
 ```
 solana program deploy target/sbf-solana-solana/release/demo.so --program-id program-keypair.json
 ```
 
-Call the contract:
+## Call the contract
 
 todo - this needs to be done from code
