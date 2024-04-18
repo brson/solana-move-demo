@@ -10,7 +10,7 @@ describes implementation details and a roadmap.
 - [Requirements](#user-content-requirements)
 - [Which toolset should Solana-Move integrate with?](#user-content-which-toolset-should-solana-move-integrate-with)
 - [Running the Solana-Move demo](#user-content-running-the-solana-move-demo)
-- [`solana-move` commands discussion](#user-content-solana-move-commands)
+- [`solana-move` commands discussion](#user-content-solana-move-commands-discussion)
 - [Calling Move programs from the client](#user-content-calling-move-programs-from-the-client)
 - [Handling on-chain bytecode dependencies](#user-content-handling-on-chain-bytecode-dependencies)
 - [Proposed roadmap](#user-content-proposed-roadmap)
@@ -23,7 +23,7 @@ describes implementation details and a roadmap.
 
 We want to aim to demo the following:
 
-- Build contracts, with dependencies
+- Build contracts, with dependencies (source, local bytecode, on-chain bytecode)
 - Test contracts on rbpf
 - Deploy and re-deploy contracts to a localnet
 - Call contracts with arguments and return values from Rust client code
@@ -42,6 +42,14 @@ This MVP forgoes the ability to use dependencies,
 which will entail locating the corresponding omve bytecode for rbpf programs;
 and to call programs directly from the CLI, which will require the same,
 plus introspection and reflection on the interface of the program.
+
+There are two features demonstrated here that are feasible with
+Move but not with plain Solana:
+
+- Calling arbitrary programs from the CLI, introspecting
+  the called program to get argument types
+- Calling dependencies without access to any of their source
+  code, again by using the bytecode.
 
 
 
@@ -78,7 +86,7 @@ of mainline Solana pull requests.
 
 ## Running the Solana-Move demo
 
-**This is aspirational - none of this works now but is what we are working toward.**
+**This is aspirational - not all of this works now but is what we are working toward.**
 
 You'll need the `move` command from Solana's `sui` repo,
 built with Solana support. This can be done with
@@ -231,6 +239,8 @@ Compare to: `sui client call`
 
 
 
+## Handling on-chain bytecode dependencies
+
 
 
 
@@ -266,8 +276,9 @@ There are three main thrusts of work here:
   so this shouldn't have much code duplication.
 - Write `solana-move deploy` - crib off of `solana program deploy`,
   or just shell out to `solana program deploy`.
+- Teach `solana-move deploy` to deploy both rbpf and the original bytecode
 - Create `solana-move call` using `solana-move-client`
-
+  - Download and introspect bytecode to get argument types
 
 ## Future
 
