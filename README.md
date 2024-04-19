@@ -243,6 +243,17 @@ todo
 
 ## Handling on-chain bytecode dependencies
 
+I am assuming we want to be able to depend on programs that we don't have the source to.
+This is something Solana programs can't do - programs must at least publish some interface glue
+to understand the custom calling and serialization conventions of each program.
+
+A scheme:
+
+- In addition to deploying the rbpf program, we also deploy the bytecode to a separate storage location
+- The bytecode storage location is derivable from the rbpf storage location
+- The `move-to-solana` / `move-cli` etc crates know how to derive this location,
+  deploy it / download it as part of the deploy, build, and call processes.
+- TODO: what about transitive bytecode dependencies?
 
 
 
@@ -276,7 +287,8 @@ There are a few main thrusts of work here:
 - Creating `solana-move-sdk` crate that can parse move values and prepare solana transactions
 - Creating the `solana-move` CLI, and especially the solana-move-specific `solana-move call`
   command (other commands will be identical to `move` and `solana` commands at first.
-- Deploying and retrieving bytecode for byte-code based dependencies and introspection.
+- Deploying and retrieving bytecode for byte-code based dependencies and introspectio.n
+- Starting a release process and releasing tools people can try out.
 - Moving the storage model forward.
 
 
